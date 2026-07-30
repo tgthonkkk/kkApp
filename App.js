@@ -15,7 +15,7 @@ import SignupScreen from './src/screens/SignupScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 import LikelistScreen from './src/screens/LikelistScreen';
 import SellinglistScreen from './src/screens/SellinglistScreen';
-import SearchScreen from './src/screens/SearchScreen';
+import AiSearchScreen from './src/screens/AiSearchScreen';
 import CategoryItemListScreen from './src/screens/CategoryItemListScreen';
 import DetailScreen from './src/screens/DetailScreen';
 
@@ -154,7 +154,7 @@ export default function App() {
 
         <Stack.Screen
           name="Search"
-          component={SearchScreen}
+          component={AiSearchScreen}
           options={{title:"검색"}}
         />
 
