@@ -150,26 +150,6 @@ if (!isLoggedIn && !loading) {
                 </View>
 
                 <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>
-                        {userInfo?.nickname || userInfo?.name || '사용자'}님을 위한 추천 상품!
-                    </Text>
-                    {loading ? (
-                        <ActivityIndicator size='small' color='#888' style={styles.loadingIndicator} />
-                    ) : (
-                        <FlatList
-                            horizontal
-                            data={majorProducts}
-                            renderItem={renderItem}
-                            keyExtractor={(item, index) => item?.id ? item.id.toString() : index.toString()}
-                            showsHorizontalScrollIndicator={false}
-                            ListEmptyComponent={
-                                <Text style={styles.emptyText}>전공 관련 상품이 아직 없습니다.</Text>
-                            }
-                        />
-                    )}
-                </View>
-
-                <View style={styles.sectionContainer}>
                     <Text style={styles.sectionTitle}>최신 대여 상품</Text>
                     {loading ? (
                         <ActivityIndicator size='small' color='#888' style={styles.loadingIndicator} />
@@ -227,7 +207,8 @@ const styles = StyleSheet.create({
         columnGap: 16,
         paddingHorizontal: 20,
         paddingTop: 10,
-        paddingBottom: 15
+        paddingBottom: 15,
+        marginTop: 30,
     },
 
     loginPromptContainer: {
