@@ -21,7 +21,7 @@ export default function SearchScreen({ navigation }) {
 
 
   const search = async()=>{
-
+    console.log("현재 API URL:", process.env.EXPO_PUBLIC_API_URL);
     console.log("검색 버튼 클릭:", keyword);
 
 
@@ -29,32 +29,37 @@ export default function SearchScreen({ navigation }) {
 
       const response = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/search`,
+<<<<<<< HEAD
         {
           keyword: keyword
         }
+=======
+        { keyword: keyword },
+        { timeout: 5000 }
+>>>>>>> c768301 (editprofile)
       );
-
 
       console.log(response.data);
 
       setResults(response.data);
 
-
-    }catch(error){
-
-      console.log("검색 오류:", error);
-
+    } catch (error) {
+      if (error.response) {
+        console.log("백엔드 응답 에러 (코드):", error.response.status);
+      } else if (error.request) {
+        console.log("서버와 통신 실패 (IP주소/방화벽/Wi-Fi 문제):", error.message);
+      } else {
+        console.log("기타 오류:", error.message);
+      }
     }
-
   };
 
 
   return (
 
-    <ScrollView>
+    <ScrollView keyboardShouldPersistTaps="handled">
 
       <View style={styles.container}>
-
 
         <Text style={styles.title}>
           AI 게시물 추천 검색
@@ -62,15 +67,10 @@ export default function SearchScreen({ navigation }) {
 
 
         <TextInput
-
           style={styles.input}
-
           value={keyword}
-
           onChangeText={setKeyword}
-
           placeholder="검색어 입력"
-
         />
 
 
@@ -78,52 +78,23 @@ export default function SearchScreen({ navigation }) {
           style={styles.button}
           onPress={search}
         >
-          <Text style={styles.buttonText}>
-            검색
-          </Text>
+          <Text style={styles.buttonText}>검색</Text>
         </Pressable>
 
 
-        <Text style={styles.subtitle}>
-          추천 결과
-        </Text>
+        <Text style={styles.subtitle}>추천 결과</Text>
 
 
-        {
-          results.map((post,index)=>(
-
-            <Pressable 
-              key={index}
-              style={styles.card}
-            >
-
-              <Text>
-                {post.title}
-              </Text>
-
-
-              <Text>
-                카테고리 : {post.category}
-              </Text>
-
-
-              <Text>
-                작성자 : {post.author}
-              </Text>
-
-
-            </Pressable>
-
-          ))
-        }
-
-
+        {results && results.map((post, index) => (
+          <Pressable key={index} style={styles.card}>
+            <Text>{post.title}</Text>
+            <Text>카테고리 : {post.category}</Text>
+            <Text>작성자 : {post.author}</Text>
+          </Pressable>
+        ))}
       </View>
-
     </ScrollView>
-
   );
-
 }
 
 

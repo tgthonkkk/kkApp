@@ -36,6 +36,7 @@ export default function EditProfileScreen() {
     const [grade, setGrade] = useState('');
 
     const [modal, setModal] = useState(false);
+    const [majorModal, setMajorModal] = useState(false);
 
     const [email, setEmail] = useState('');
     const [school, setSchool] = useState('');
@@ -44,6 +45,16 @@ export default function EditProfileScreen() {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [changingPassword, setChangingPassword] = useState(false);
+
+    const majorList = [
+        '공학/자연',
+        '미술/건축',
+        '음악/체육',
+        '의학/보건',
+        '인문/상경',
+        '사범/교육',
+        '기타'
+    ];
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -163,7 +174,7 @@ export default function EditProfileScreen() {
             await updateDoc(userDocRef, {
                 profileImage: uploadedImageUrl || null,
                 nickname: nickname.trim(),
-                major: major.trim(),
+                major: major,
                 grade: grade,
             });
 
@@ -220,13 +231,36 @@ export default function EditProfileScreen() {
                                 placeholder="닉네임을 입력하세요"
                             />
 
-                            <Text style={styles.label}>전공 / 학과</Text>
-                            <TextInput
-                                style={styles.input}
-                                value={major}
-                                onChangeText={setMajor}
-                                placeholder="전공을 입력하세요"
-                            />
+                            <Text style={styles.label}>전공</Text>
+                            <TouchableOpacity
+                                style={styles.gradeoption}
+                                onPress={() => {
+                                    setModal(false);
+                                    setMajorModal(!majorModal);
+                                }}
+                            >
+                                <Text style={{ color: major ? '#333' : '#ccc', fontSize: 15 }}>
+                                    {major ? major : "전공을 선택해 주세요"}
+                                </Text>
+                                <Text style={{ color: '#666' }}>▼</Text>
+                            </TouchableOpacity>
+
+                            {majorModal && (
+                                <View style={styles.dropdownbox}>
+                                    {majorList.map((m) => (
+                                    <TouchableOpacity
+                                        key={m}
+                                        style={styles.modalitem}
+                                        onPress={() => {
+                                        setMajor(m);
+                                        setMajorModal(false);
+                                        }}
+                                    >
+                                        <Text style={styles.dropdownText}>{m}</Text>
+                                    </TouchableOpacity>
+                                    ))}
+                                </View>
+                            )}
 
                             <Text style={styles.label}>학년</Text>
                             <TouchableOpacity
