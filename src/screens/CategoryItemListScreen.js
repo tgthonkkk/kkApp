@@ -73,7 +73,7 @@ export default function CategoryItemListScreen({route, navigation}) {
                     </Text>
                 </View>
                 <Text style={styles.productTitle} numberOfLines={1}>{item.title}</Text>
-                <Text style={styles.price}>{item.price.toLocaleString()}원 {item.type === 'RENT' && '/ 일'}</Text>
+                <Text style={styles.price}>{item.price.toLocaleString()}원 {item.type === 'RENT'}</Text>
                 <Text style={styles.location}>{item.location}</Text>
             </View>
         </TouchableOpacity>

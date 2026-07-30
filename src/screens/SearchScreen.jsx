@@ -28,7 +28,7 @@ export default function SearchScreen({ navigation }) {
     try{
 
       const response = await axios.post(
-        "http://192.168.35.251:8080/search",
+        `${process.env.EXPO_PUBLIC_API_URL}/search`,
         {
           keyword: keyword
         }

@@ -173,6 +173,14 @@ export default function App() {
             title:"상품 상세"
           }}
         />
+
+        <Stack.Screen
+          name="AddScreen"
+          component={AddScreen}
+          options={{
+            title: '상품 등록/수정'
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

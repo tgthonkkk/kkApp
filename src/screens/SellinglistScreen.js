@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { initialSellingProducts } from '../data/mockSellingData';
+import { db, auth } from '../api/firebase'; 
+import { collection, query, where, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 
 const Status = {
   SELLING: { text: '판매중', bgColor: '#e6fcf5', textColor: '#0ca678' },
@@ -14,21 +16,62 @@ const Status = {
 export default function SellinglistScreen() {
   const navigation = useNavigation();
 
-  const [products, setProducts] = useState(initialSellingProducts);
+  const [products, setProducts] = useState([]);
   const {showActionSheetWithOptions} = useActionSheet();
+
+  const fetchMySellingProducts = async () => {
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) return;
+
+      const q = query(
+        collection(db, "posts"), 
+        where("authorUid", "==", currentUser.uid)
+      );
+
+      const querySnapshot = await getDocs(q);
+      const fetchedProducts = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      setProducts(fetchedProducts);
+    } catch (error) {
+      console.error("판매 내역 불러오기 실패:", error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchMySellingProducts();
+    }, [])
+  );
 
   const deleteProduct = (productId) => {
     Alert.alert("상품 삭제", "정말 이 상품을 삭제하시겠습니까?",
       [
-        {text: "취소", style: "cancel"},
-        {text: "삭제", style: "destructive",
-          onPress: () => {setProducts(prev => prev.filter(p => p.id !== productId));}}
+        { text: "취소", style: "cancel" },
+        { 
+          text: "삭제", 
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deleteDoc(doc(db, "posts", productId));
+              setProducts(prev => prev.filter(p => p.id !== productId));
+              
+              Alert.alert("알림", "상품이 삭제되었습니다.");
+            } catch (error) {
+              console.error("상품 삭제 실패:", error);
+              Alert.alert("오류", "상품 삭제에 실패했습니다.");
+            }
+          }
+        }
       ]
     );
   };
 
   const editProduct = (product) => {
-    navigation.navigate('AddModal', { productData: product });
+    navigation.navigate('AddScreen', { productData: product });
   };
 
   const changeStatus = (productId) => {
@@ -37,16 +80,25 @@ export default function SellinglistScreen() {
     
     showActionSheetWithOptions(
       {options, cancelButtonIndex, title: '상품 상태 변경'},
-      (selectedIndex) => {
+      async (selectedIndex) => {
         let newStatus = null;
         switch (selectedIndex) {
           case 0: newStatus = 'SELLING'; break;
           case 1: newStatus = 'RESERVED'; break;
           case 2: newStatus = 'SOLD_OUT'; break;
+          default: return;
         }
 
         if (newStatus) {
-          setProducts(prev => prev.map(p => p.id === productId ? {...p, status: newStatus } : p));
+          try {
+            const productRef = doc(db, "posts", productId);
+            await updateDoc(productRef, { status: newStatus });
+
+            setProducts(prev => prev.map(p => p.id === productId ? {...p, status: newStatus } : p));
+          } catch (error) {
+            console.error("상태 변경 실패:", error);
+            Alert.alert("오류", "상품 상태 변경에 실패했습니다.");
+          }
         }
       }
     );
@@ -57,7 +109,7 @@ export default function SellinglistScreen() {
     return (
       <View style={styles.card}>
         <View style={styles.firstRow}>
-          <Image source={{ uri: item.imageUrl }} style={styles.image} />
+          <Image source={{ uri: item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : 'https://via.placeholder.com/70' }} style={styles.image}/>
           
           <View style={styles.infoContainer}>
             <View style={[styles.badgeContainer, { backgroundColor: currentStatus.bgColor}]}>
@@ -91,14 +143,6 @@ export default function SellinglistScreen() {
             >
               <Ionicons name="create-outline" size={17} color="#555" style={styles.actionIcon} />
               <Text style={styles.actionButtonText}>수정</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={styles.actionButton} 
-              onPress={() => changeStatus(item.id)}
-            >
-              <Ionicons name="ellipsis-horizontal-circle-outline" size={17} color="#555" style={styles.actionIcon} />
-              <Text style={styles.actionButtonText}>상태 변경</Text>
             </TouchableOpacity>
         </View>
       </View>

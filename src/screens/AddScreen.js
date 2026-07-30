@@ -13,7 +13,7 @@ const CATEGORY_DATA = {
     '기타': ['생활용품', '의류','굿즈', '기타']
 };
 
-export default function AddScreen() {
+function AddScreen() {
     const [user, setUser] = useState(null);
     const [initializing, setInitializing] = useState(true);
     const navigation = useNavigation();
@@ -596,3 +596,5 @@ const styles = StyleSheet.create({
         color: '#333' 
     }
 });
+
+export default AddScreen;
