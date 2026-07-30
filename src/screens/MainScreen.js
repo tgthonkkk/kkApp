@@ -227,7 +227,8 @@ const styles = StyleSheet.create({
         columnGap: 16,
         paddingHorizontal: 20,
         paddingTop: 10,
-        paddingBottom: 15
+        paddingBottom: 15,
+        marginTop: 30,
     },
 
     loginPromptContainer: {

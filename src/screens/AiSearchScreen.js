@@ -57,7 +57,8 @@ export default function SearchScreen({ navigation }) {
           id: doc.id, 
           title: data.title || '제목 없음',
           mainCategory: data.mainCategory || '기타',
-          subCategory: data.subCategory || '기타'
+          subCategory: data.subCategory || '기타',
+          content: data.content || ''
         });
       });
 
@@ -73,7 +74,7 @@ export default function SearchScreen({ navigation }) {
         앱 내 카테고리 구조는 다음과 같습니다:
         ${JSON.stringify(CATEGORY_DATA)}
 
-        아래의 게시물 목록 중에서 **오직 '제목(title)'과 '카테고리'**를 기준으로 사용자의 검색어와 직접적으로 관련이 있는 게시물의 id들만 순수 JSON 배열 형태로(예: ["id1", "id2"]) 최대 10개까지만 골라주세요. 제목과 연관성이 낮거나 애매한 것은 과감히 제외하세요.
+        아래의 게시물 목록 중에서 **오직 '제목(title)'과 '카테고리와 content'**를 기준으로 사용자의 검색어와 직접적으로 관련이 있는 게시물의 id들만 순수 JSON 배열 형태로(예: ["id1", "id2"]) 최대 10개까지만 골라주세요. 제목, content와 연관성이 낮거나 애매한 것은 과감히 제외하세요.
         주의: 마크다운 기호(백틱 등)나 다른 설명글은 절대 포함하지 말고, 오직 대괄호 [ 로 시작해서 대괄호 ] 로 끝나는 JSON 배열 문자열만 정확히 출력하세요. 연관된 것이 없다면 [] 를 출력하세요.
         
         게시물 목록:

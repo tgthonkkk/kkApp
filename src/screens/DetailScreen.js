@@ -370,6 +370,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333',
         lineHeight: 24,
+        marginBottom: 60,
     },
     footer: {
         position: 'absolute',
