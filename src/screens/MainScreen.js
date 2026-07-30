@@ -84,7 +84,7 @@ export default function MainScreen({navigation}) {
 
         const isRent = item.type === 'RENT';
         const rawPrice = Number(item?.price) || 0;
-        const formattedPrice = `${rawPrice.toLocaleString()}원${isRent ? ' / 일' : ''}`;
+        const formattedPrice = `${rawPrice.toLocaleString()}원${isRent ? '': ''}`;
         
         return (
             <TouchableOpacity 

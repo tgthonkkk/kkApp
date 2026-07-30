@@ -10,7 +10,7 @@ import {
   ActivityIndicator 
 } from 'react-native';
 
-const CAREERNET_API_KEY = ;
+const CAREERNET_API_KEY = process.env.EXPO_PUBLIC_CAREERNET_API_KEY;
 
 const formatCampusName = (schoolName = '', campusName = '') => {
     const cleanSchool = schoolName.trim();

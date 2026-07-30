@@ -12,7 +12,7 @@ function App() {
     console.log("검색 버튼 클릭:", keyword);
 
     const response = await axios.post(
-      "http://localhost:8080/search",
+      `${process.env.EXPO_PUBLIC_API_URL}/search`,
       {
         keyword: keyword
       }
