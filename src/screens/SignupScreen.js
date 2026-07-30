@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, TextInput, ScrollView, TouchableOpacity, Alert, Modal } from "react-native";
 import { signUp } from '../api/signservice';
+import SchoolSearchModal from './SchoolSearchModal';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SignupScreen({navigation}) {
     const [phonenum, setPhonenum] = useState('');
@@ -10,6 +12,10 @@ export default function SignupScreen({navigation}) {
     const [school, setSchool] = useState('');
     const [major, setMajor] = useState('');
     const [grade, setGrade] = useState('');
+
+    const [schoolModal, setSchoolModal] = useState(false);
+    const [majorModal, setMajorModal] = useState(false);
+    const majorOptions = ['공학/자연', '미술/건축', '음악/체육', '의학/보건', '인문/상경', '사범/교육', '기타'];
 
     const [modal, setModal] = useState(false);
 
@@ -74,21 +80,56 @@ export default function SignupScreen({navigation}) {
             />
 
             <Text style={styles.label}>학교</Text>
-            <TextInput 
-                style={styles.input}
-                placeholder="학교"
-                value={school}
-                onChangeText={(text) => setSchool(text)}
+            <TouchableOpacity
+                style={styles.selectOption}
+                onPress={() => {
+                    setSchoolModal(true);
+                    setMajorModal(false);
+                }}
+            >
+                <Text style={{ color: school ? '#333' : '#ccc', fontSize: 16 }}>
+                    {school ? school : "학교를 검색해 주세요"}
+                </Text>
+                <Ionicons name="search-outline" size={17} color="black" />
+            </TouchableOpacity>
+
+            <SchoolSearchModal 
+                visible={schoolModal}
+                onClose={() => setSchoolModal(false)}
+                onSelect={(selectedSchool) => setSchool(selectedSchool)}
             />
 
 
             <Text style={styles.label}>전공</Text>
-            <TextInput 
-                style={styles.input}
-                placeholder="전공"
-                value={major}
-                onChangeText={(text) => setMajor(text)}
-            />
+           <TouchableOpacity
+                style={styles.selectOption}
+                onPress={() => {setMajorModal(!majorModal);}}
+            >
+                <Text style={{ color: major ? '#333' : '#ccc', fontSize: 16 }}>
+                    {major ? major : "전공을 선택해 주세요"}
+                </Text>
+                <Text style={{ color: '#666' }}>▼</Text>
+            </TouchableOpacity>
+
+            {majorModal && (
+                <View style={styles.dropdownbox}>
+                    {majorOptions.map((m, index) => (
+                        <TouchableOpacity
+                            key={m}
+                            style={[
+                                styles.modalitem,
+                                index === majorOptions.length - 1 && { borderBottomWidth: 0 }
+                            ]}
+                            onPress={() => {
+                                setMajor(m);
+                                setMajorModal(false);
+                            }}
+                        >
+                            <Text>{m}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            )}
 
             <Text style={styles.label}>학년</Text>
             <TouchableOpacity
@@ -157,6 +198,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 25
+    },
+
+    selectOption: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#000',
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 20,
+        height: 40,
+        backgroundColor: '#fff'
     },
 
     gradeoption: {
