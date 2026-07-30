@@ -63,3 +63,26 @@ export const fetchProductsBySchool = async (school) => {
         throw error;
     }
 };
+
+export const fetchProductsByMajor = async (userMajor) => {
+    try {
+        if (!userMajor) return [];
+
+        const postsRef = collection(db, 'posts');
+
+        const simpleQuery = query(
+            postsRef,
+            where('subCategory', '==', userMajor)
+        );
+
+        const querySnapshot = await getDocs(simpleQuery);
+        
+        return querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+    } catch (error) {
+        console.error("전공 상품 불러오기 에러:", error);
+        return [];
+    }
+};

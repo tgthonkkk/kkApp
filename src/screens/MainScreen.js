@@ -151,7 +151,7 @@ if (!isLoggedIn && !loading) {
 
                 <View style={styles.sectionContainer}>
                     <Text style={styles.sectionTitle}>
-                        {userInfo?.nickname || userInfo?.name || '사용자'}님을 위한 추천 상품!
+                        {userInfo?.nickname || userInfo?.name || '사용자'}님을 위한 전공 상품!
                     </Text>
                     {loading ? (
                         <ActivityIndicator size='small' color='#888' style={styles.loadingIndicator} />

@@ -29,14 +29,9 @@ export default function SearchScreen({ navigation }) {
 
       const response = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/search`,
-<<<<<<< HEAD
         {
           keyword: keyword
         }
-=======
-        { keyword: keyword },
-        { timeout: 5000 }
->>>>>>> c768301 (editprofile)
       );
 
       console.log(response.data);
